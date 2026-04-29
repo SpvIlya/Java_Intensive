@@ -1,6 +1,6 @@
 package entity;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -41,7 +41,6 @@ public class User {
         }
     }
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }

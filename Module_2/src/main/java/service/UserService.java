@@ -1,7 +1,7 @@
 package service;
 
-import com.example.userservice.dao.UserDAO;
-import com.example.userservice.entity.User;
+import dao.UserDAO;
+import entity.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,7 +20,6 @@ public class UserService {
     public User createUser(String name, String email, Integer age) {
         logger.info("Creating user: name={}, email={}, age={}", name, email, age);
 
-        // Validate input
         if (name == null || name.trim().isEmpty()) {
             throw new IllegalArgumentException("Name cannot be empty");
         }
@@ -31,7 +30,6 @@ public class UserService {
             throw new IllegalArgumentException("Age must be between 0 and 150");
         }
 
-        // Check if email already exists
         Optional<User> existingUser = userDAO.findByEmail(email);
         if (existingUser.isPresent()) {
             throw new IllegalStateException("User with email " + email + " already exists");
@@ -68,7 +66,6 @@ public class UserService {
             user.setName(name.trim());
         }
         if (email != null && !email.trim().isEmpty()) {
-            // Check if new email is already taken by another user
             Optional<User> userWithEmail = userDAO.findByEmail(email.trim());
             if (userWithEmail.isPresent() && !userWithEmail.get().getId().equals(id)) {
                 throw new IllegalStateException("Email " + email + " is already taken");

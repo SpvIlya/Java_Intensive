@@ -1,8 +1,8 @@
 package console;
 
-import com.example.userservice.entity.User;
-import com.example.userservice.service.UserService;
-import com.example.userservice.util.HibernateUtil;
+import entity.User;
+import service.UserService;
+import util.HibernateUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,7 +16,7 @@ public class ConsoleApp {
     private static final UserService userService = new UserService();
     private static final Scanner scanner = new Scanner(System.in);
 
-    public static void main(String[] args) {
+    static void main(String[] args) {
         logger.info("Starting User Service Console Application");
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -199,7 +199,6 @@ public class ConsoleApp {
         try {
             Long id = Long.parseLong(idStr);
 
-            // Check if user exists
             Optional<User> userOpt = userService.getUserById(id);
             if (userOpt.isEmpty()) {
                 System.out.println("User with ID " + id + " not found.");

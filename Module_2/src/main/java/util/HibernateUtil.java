@@ -14,7 +14,7 @@ public class HibernateUtil {
         try {
             Configuration configuration = new Configuration();
             configuration.configure("hibernate.cfg.xml");
-            configuration.addAnnotatedClass(com.example.userservice.entity.User.class);
+            configuration.addAnnotatedClass(entity.User.class);
 
             return configuration.buildSessionFactory();
         } catch (Throwable ex) {

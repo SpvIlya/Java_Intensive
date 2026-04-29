@@ -1,17 +1,16 @@
 package dao;
 
-import com.example.userservice.entity.User;
-import com.example.userservice.util.HibernateUtil;
+import entity.User;
+import jakarta.persistence.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
+import util.HibernateUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
-
-import javax.persistence.NoResultException;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,7 +18,6 @@ public class UserDAO {
 
     private static final Logger logger = LogManager.getLogger(UserDAO.class);
 
-    // Create
     public User save(User user) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -37,7 +35,6 @@ public class UserDAO {
         }
     }
 
-    // Read by ID
     public Optional<User> findById(Long id) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             User user = session.get(User.class, id);
@@ -49,7 +46,6 @@ public class UserDAO {
         }
     }
 
-    // Read all
     public List<User> findAll() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             CriteriaBuilder cb = session.getCriteriaBuilder();
@@ -67,7 +63,6 @@ public class UserDAO {
         }
     }
 
-    // Update
     public User update(User user) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -85,7 +80,6 @@ public class UserDAO {
         }
     }
 
-    // Delete by entity
     public void delete(User user) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -102,7 +96,6 @@ public class UserDAO {
         }
     }
 
-    // Delete by ID
     public boolean deleteById(Long id) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -126,7 +119,6 @@ public class UserDAO {
         }
     }
 
-    // Find by email (unique constraint)
     public Optional<User> findByEmail(String email) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             CriteriaBuilder cb = session.getCriteriaBuilder();
