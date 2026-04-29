@@ -1,0 +1,53 @@
+# Compiled files
+target/
+out/
+**/target/
+**/out/
+
+# Maven wrapper
+!.mvn/wrapper/maven-wrapper.jar
+
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/shelf/
+
+# Eclipse
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+
+# VS Code
+.vscode/
+
+# Mac OS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Logs and temp files
+*.log
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Kotlin
+.kotlin
