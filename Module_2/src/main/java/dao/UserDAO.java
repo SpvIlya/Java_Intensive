@@ -24,25 +24,25 @@ public class UserDAO {
             transaction = session.beginTransaction();
             session.persist(user);
             transaction.commit();
-            logger.info("User saved successfully: {}", user);
+            logger.info("Пользователь успешно сохранен: {}", user);
             return user;
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
-            logger.error("Error saving user: {}", e.getMessage());
-            throw new RuntimeException("Failed to save user", e);
+            logger.error("Ошибка сохранения пользователя: {}", e.getMessage());
+            throw new RuntimeException("Не удалось сохранить пользователя", e);
         }
     }
 
     public Optional<User> findById(Long id) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             User user = session.get(User.class, id);
-            logger.debug("Finding user by id {}: {}", id, user);
+            logger.debug("Поиск пользователя по id {}: {}", id, user);
             return Optional.ofNullable(user);
         } catch (Exception e) {
-            logger.error("Error finding user by id {}: {}", id, e.getMessage());
-            throw new RuntimeException("Failed to find user", e);
+            logger.error("Ошибка поиска пользователя по id {}: {}", id, e.getMessage());
+            throw new RuntimeException("Не удалось найти пользователя", e);
         }
     }
 
@@ -55,11 +55,11 @@ public class UserDAO {
 
             Query<User> query = session.createQuery(cr);
             List<User> users = query.getResultList();
-            logger.info("Found {} users", users.size());
+            logger.info("Найденные {} пользователи", users.size());
             return users;
         } catch (Exception e) {
-            logger.error("Error finding all users: {}", e.getMessage());
-            throw new RuntimeException("Failed to find all users", e);
+            logger.error("Ошибка поиска всех пользователей: {}", e.getMessage());
+            throw new RuntimeException("Не удалось найти всех пользователей", e);
         }
     }
 
@@ -69,14 +69,14 @@ public class UserDAO {
             transaction = session.beginTransaction();
             User mergedUser = session.merge(user);
             transaction.commit();
-            logger.info("User updated successfully: {}", mergedUser);
+            logger.info("Пользователь успешно обновлен: {}", mergedUser);
             return mergedUser;
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
-            logger.error("Error updating user: {}", e.getMessage());
-            throw new RuntimeException("Failed to update user", e);
+            logger.error("Ошибка обновления пользователя: {}", e.getMessage());
+            throw new RuntimeException("Не удалось обновить пользователя", e);
         }
     }
 
@@ -86,13 +86,13 @@ public class UserDAO {
             transaction = session.beginTransaction();
             session.remove(session.contains(user) ? user : session.merge(user));
             transaction.commit();
-            logger.info("User deleted successfully: {}", user);
+            logger.info("Пользователь успешно удален: {}", user);
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
-            logger.error("Error deleting user: {}", e.getMessage());
-            throw new RuntimeException("Failed to delete user", e);
+            logger.error("Ошибка удаления пользователя: {}", e.getMessage());
+            throw new RuntimeException("Не удалось удалить пользователя", e);
         }
     }
 
@@ -104,18 +104,18 @@ public class UserDAO {
             if (user != null) {
                 session.remove(user);
                 transaction.commit();
-                logger.info("User with id {} deleted successfully", id);
+                logger.info("Пользователь с id {} успешно удален", id);
                 return true;
             }
             transaction.commit();
-            logger.warn("User with id {} not found for deletion", id);
+            logger.warn("Пользователь с id {} не найден для удаления", id);
             return false;
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
-            logger.error("Error deleting user by id {}: {}", id, e.getMessage());
-            throw new RuntimeException("Failed to delete user", e);
+            logger.error("Ошибка удаления пользователя по id {}: {}", id, e.getMessage());
+            throw new RuntimeException("Не удалось удалить пользователя", e);
         }
     }
 
@@ -129,11 +129,11 @@ public class UserDAO {
             Query<User> query = session.createQuery(cr);
             return Optional.ofNullable(query.getSingleResult());
         } catch (NoResultException e) {
-            logger.debug("No user found with email: {}", email);
+            logger.debug("Пользователь с email не найден: {}", email);
             return Optional.empty();
         } catch (Exception e) {
-            logger.error("Error finding user by email: {}", e.getMessage());
-            throw new RuntimeException("Failed to find user by email", e);
+            logger.error("Ошибка поиска пользователя по email: {}", e.getMessage());
+            throw new RuntimeException("Не удалось найти пользователя по email", e);
         }
     }
 }

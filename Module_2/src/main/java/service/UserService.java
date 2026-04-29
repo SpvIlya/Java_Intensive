@@ -18,21 +18,21 @@ public class UserService {
     }
 
     public User createUser(String name, String email, Integer age) {
-        logger.info("Creating user: name={}, email={}, age={}", name, email, age);
+        logger.info("Создание пользователя: имя={}, email={}, возраст={}", name, email, age);
 
         if (name == null || name.trim().isEmpty()) {
-            throw new IllegalArgumentException("Name cannot be empty");
+            throw new IllegalArgumentException("Имя не может быть пустым");
         }
         if (email == null || email.trim().isEmpty()) {
-            throw new IllegalArgumentException("Email cannot be empty");
+            throw new IllegalArgumentException("Email не может быть пустым");
         }
-        if (age == null || age < 0 || age > 150) {
-            throw new IllegalArgumentException("Age must be between 0 and 150");
+        if (age == null || age < 0 || age > 100) {
+            throw new IllegalArgumentException("Возраст должен быть между 0 and 100");
         }
 
         Optional<User> existingUser = userDAO.findByEmail(email);
         if (existingUser.isPresent()) {
-            throw new IllegalStateException("User with email " + email + " already exists");
+            throw new IllegalStateException("Пользователь с email " + email + " уже существует");
         }
 
         User user = new User(name.trim(), email.trim(), age);
@@ -40,24 +40,24 @@ public class UserService {
     }
 
     public Optional<User> getUserById(Long id) {
-        logger.info("Getting user by id: {}", id);
+        logger.info("Получение пользователя по id: {}", id);
         if (id == null || id <= 0) {
-            throw new IllegalArgumentException("Invalid user id");
+            throw new IllegalArgumentException("Неверный id пользователя");
         }
         return userDAO.findById(id);
     }
 
     public List<User> getAllUsers() {
-        logger.info("Getting all users");
+        logger.info("Получение всех пользователей");
         return userDAO.findAll();
     }
 
     public User updateUser(Long id, String name, String email, Integer age) {
-        logger.info("Updating user id: {}", id);
+        logger.info("Обновления пользователя по id: {}", id);
 
         Optional<User> existingUserOpt = userDAO.findById(id);
         if (existingUserOpt.isEmpty()) {
-            throw new IllegalStateException("User with id " + id + " not found");
+            throw new IllegalStateException("Пользователь с id " + id + " не найден");
         }
 
         User user = existingUserOpt.get();
@@ -68,7 +68,7 @@ public class UserService {
         if (email != null && !email.trim().isEmpty()) {
             Optional<User> userWithEmail = userDAO.findByEmail(email.trim());
             if (userWithEmail.isPresent() && !userWithEmail.get().getId().equals(id)) {
-                throw new IllegalStateException("Email " + email + " is already taken");
+                throw new IllegalStateException("Email " + email + " уже занят");
             }
             user.setEmail(email.trim());
         }
@@ -80,9 +80,9 @@ public class UserService {
     }
 
     public boolean deleteUser(Long id) {
-        logger.info("Deleting user id: {}", id);
+        logger.info("Удаление пользователя по id: {}", id);
         if (id == null || id <= 0) {
-            throw new IllegalArgumentException("Invalid user id");
+            throw new IllegalArgumentException("Неверный id пользователя");
         }
         return userDAO.deleteById(id);
     }

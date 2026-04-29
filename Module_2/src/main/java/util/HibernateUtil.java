@@ -18,7 +18,7 @@ public class HibernateUtil {
 
             return configuration.buildSessionFactory();
         } catch (Throwable ex) {
-            logger.error("Initial SessionFactory creation failed: {}", ex.getMessage());
+            logger.error("Не удалось создать начальный сеанс: {}", ex.getMessage());
             throw new ExceptionInInitializerError(ex);
         }
     }
@@ -30,7 +30,7 @@ public class HibernateUtil {
     public static void shutdown() {
         if (sessionFactory != null) {
             sessionFactory.close();
-            logger.info("SessionFactory closed");
+            logger.info("Сеанс закрыт");
         }
     }
 }
