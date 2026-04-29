@@ -228,7 +228,7 @@ public class ConsoleApp {
             System.out.println("Error: " + e.getMessage());
         } catch (Exception e) {
             logger.error("Unexpected error during delete user", e);
-            System.out.println("Unexpected error occurred. Check logs for details.");
+            System.out.println(" Unexpected error occurred. Check logs for details.");
         }
     }
 }
