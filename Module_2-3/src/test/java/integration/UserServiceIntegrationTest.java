@@ -18,7 +18,6 @@ class UserServiceIntegrationTest {
 
     @BeforeAll
     static void setUpAll() {
-        // Инициализируем TestHibernateUtil чтобы запустить контейнер
         TestHibernateUtil.getTestSessionFactory();
         userService = new UserService();
     }
@@ -30,7 +29,6 @@ class UserServiceIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        // Очищаем всех пользователей перед каждым тестом
         userService.getAllUsers().forEach(user -> userService.deleteUser(user.getId()));
     }
 
@@ -38,26 +36,21 @@ class UserServiceIntegrationTest {
     @Order(1)
     @DisplayName("Полный жизненный цикл пользователя")
     void testCompleteUserLifecycle() {
-        // 1. Создание пользователя
         User created = userService.createUser("Тестовый Пользователь", "test@example.com", 25);
         assertThat(created.getId()).isNotNull();
         assertThat(created.getName()).isEqualTo("Тестовый Пользователь");
 
-        // 2. Поиск по ID
         Optional<User> found = userService.getUserById(created.getId());
         assertThat(found).isPresent();
         assertThat(found.get().getEmail()).isEqualTo("test@example.com");
 
-        // 3. Обновление пользователя
         User updated = userService.updateUser(created.getId(), "Обновленное Имя", null, 30);
         assertThat(updated.getName()).isEqualTo("Обновленное Имя");
         assertThat(updated.getAge()).isEqualTo(30);
 
-        // 4. Удаление пользователя
         boolean deleted = userService.deleteUser(created.getId());
         assertThat(deleted).isTrue();
 
-        // 5. Проверка, что пользователь удален
         Optional<User> afterDelete = userService.getUserById(created.getId());
         assertThat(afterDelete).isEmpty();
     }
@@ -66,10 +59,8 @@ class UserServiceIntegrationTest {
     @Order(2)
     @DisplayName("Проверка уникальности email")
     void testEmailUniqueness() {
-        // Создаем первого пользователя
         userService.createUser("Первый", "unique@example.com", 20);
 
-        // Пытаемся создать второго с тем же email
         assertThatThrownBy(() -> userService.createUser("Второй", "unique@example.com", 25))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("уже существует");

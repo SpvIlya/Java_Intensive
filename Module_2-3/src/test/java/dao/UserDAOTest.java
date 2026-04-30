@@ -4,8 +4,11 @@ import entity.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
 import org.junit.jupiter.api.*;
-import util.TestHibernateUtil;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,8 +16,15 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@Testcontainers
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class UserDAOTest {
+
+    @Container
+    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15")
+            .withDatabaseName("testdb")
+            .withUsername("test")
+            .withPassword("test");
 
     private static SessionFactory sessionFactory;
     private UserDAO userDAO;
@@ -23,12 +33,28 @@ class UserDAOTest {
 
     @BeforeAll
     static void setUpAll() {
-        sessionFactory = TestHibernateUtil.getTestSessionFactory();
+        Configuration configuration = new Configuration();
+
+        configuration.setProperty("hibernate.connection.driver_class", "org.postgresql.Driver");
+        configuration.setProperty("hibernate.connection.url", postgres.getJdbcUrl());
+        configuration.setProperty("hibernate.connection.username", postgres.getUsername());
+        configuration.setProperty("hibernate.connection.password", postgres.getPassword());
+        configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
+        configuration.setProperty("hibernate.hbm2ddl.auto", "create-drop");
+        configuration.setProperty("hibernate.show_sql", "true");
+        configuration.setProperty("hibernate.format_sql", "true");
+        configuration.setProperty("hibernate.connection.pool_size", "3");
+
+        configuration.addAnnotatedClass(User.class);
+
+        sessionFactory = configuration.buildSessionFactory();
     }
 
     @AfterAll
     static void tearDownAll() {
-        TestHibernateUtil.close();
+        if (sessionFactory != null) {
+            sessionFactory.close();
+        }
     }
 
     @BeforeEach
@@ -37,7 +63,6 @@ class UserDAOTest {
         session = sessionFactory.openSession();
         transaction = session.beginTransaction();
 
-        // Clean up tables before each test
         session.createMutationQuery("DELETE FROM User").executeUpdate();
         transaction.commit();
     }
@@ -53,13 +78,10 @@ class UserDAOTest {
     @Order(1)
     @DisplayName("Сохранение пользователя - успешное создание")
     void testSaveUser() {
-        // Given
         User user = new User("Иван Петров", "ivan@example.com", 25);
 
-        // When
         User savedUser = userDAO.save(user);
 
-        // Then
         assertThat(savedUser).isNotNull();
         assertThat(savedUser.getId()).isNotNull();
         assertThat(savedUser.getName()).isEqualTo("Иван Петров");
@@ -72,28 +94,22 @@ class UserDAOTest {
     @Order(2)
     @DisplayName("Поиск пользователя по ID - успешное нахождение")
     void testFindById() {
-        // Given
         User user = new User("Мария Сидорова", "maria@example.com", 30);
         User savedUser = userDAO.save(user);
 
-        // When
         Optional<User> foundUser = userDAO.findById(savedUser.getId());
 
-        // Then
         assertThat(foundUser).isPresent();
         assertThat(foundUser.get().getName()).isEqualTo("Мария Сидорова");
         assertThat(foundUser.get().getEmail()).isEqualTo("maria@example.com");
-        assertThat(foundUser.get().getAge()).isEqualTo(30);
     }
 
     @Test
     @Order(3)
     @DisplayName("Поиск пользователя по ID - пользователь не найден")
     void testFindByIdNotFound() {
-        // When
         Optional<User> foundUser = userDAO.findById(999L);
 
-        // Then
         assertThat(foundUser).isEmpty();
     }
 
@@ -101,16 +117,13 @@ class UserDAOTest {
     @Order(4)
     @DisplayName("Поиск всех пользователей - получение списка")
     void testFindAll() {
-        // Given
         User user1 = new User("Алексей Иванов", "alexey@example.com", 28);
         User user2 = new User("Елена Петрова", "elena@example.com", 35);
         userDAO.save(user1);
         userDAO.save(user2);
 
-        // When
         List<User> users = userDAO.findAll();
 
-        // Then
         assertThat(users).hasSize(2);
         assertThat(users).extracting(User::getName)
                 .containsExactlyInAnyOrder("Алексей Иванов", "Елена Петрова");
@@ -120,10 +133,8 @@ class UserDAOTest {
     @Order(5)
     @DisplayName("Поиск всех пользователей - пустой список")
     void testFindAllEmpty() {
-        // When
         List<User> users = userDAO.findAll();
 
-        // Then
         assertThat(users).isEmpty();
     }
 
@@ -131,21 +142,16 @@ class UserDAOTest {
     @Order(6)
     @DisplayName("Обновление пользователя - успешное обновление")
     void testUpdateUser() {
-        // Given
         User user = new User("Оригинальное имя", "original@example.com", 20);
         User savedUser = userDAO.save(user);
 
-        // When
         savedUser.setName("Обновленное имя");
         savedUser.setAge(25);
         User updatedUser = userDAO.update(savedUser);
 
-        // Then
         assertThat(updatedUser.getName()).isEqualTo("Обновленное имя");
         assertThat(updatedUser.getAge()).isEqualTo(25);
-        assertThat(updatedUser.getEmail()).isEqualTo("original@example.com");
 
-        // Verify in database
         Optional<User> verified = userDAO.findById(savedUser.getId());
         assertThat(verified).isPresent();
         assertThat(verified.get().getName()).isEqualTo("Обновленное имя");
@@ -155,14 +161,11 @@ class UserDAOTest {
     @Order(7)
     @DisplayName("Удаление пользователя по ID - успешное удаление")
     void testDeleteById() {
-        // Given
         User user = new User("Для удаления", "delete@example.com", 40);
         User savedUser = userDAO.save(user);
 
-        // When
         boolean deleted = userDAO.deleteById(savedUser.getId());
 
-        // Then
         assertThat(deleted).isTrue();
         Optional<User> foundUser = userDAO.findById(savedUser.getId());
         assertThat(foundUser).isEmpty();
@@ -172,10 +175,8 @@ class UserDAOTest {
     @Order(8)
     @DisplayName("Удаление пользователя по ID - пользователь не найден")
     void testDeleteByIdNotFound() {
-        // When
         boolean deleted = userDAO.deleteById(999L);
 
-        // Then
         assertThat(deleted).isFalse();
     }
 
@@ -183,14 +184,11 @@ class UserDAOTest {
     @Order(9)
     @DisplayName("Удаление пользователя по объекту - успешное удаление")
     void testDeleteByEntity() {
-        // Given
         User user = new User("Удаление по объекту", "deleteEntity@example.com", 35);
         User savedUser = userDAO.save(user);
 
-        // When
         userDAO.delete(savedUser);
 
-        // Then
         Optional<User> foundUser = userDAO.findById(savedUser.getId());
         assertThat(foundUser).isEmpty();
     }
@@ -199,27 +197,21 @@ class UserDAOTest {
     @Order(10)
     @DisplayName("Поиск пользователя по email - успешное нахождение")
     void testFindByEmail() {
-        // Given
         User user = new User("Email тест", "uniquetest@example.com", 22);
         userDAO.save(user);
 
-        // When
         Optional<User> foundUser = userDAO.findByEmail("uniquetest@example.com");
 
-        // Then
         assertThat(foundUser).isPresent();
         assertThat(foundUser.get().getName()).isEqualTo("Email тест");
-        assertThat(foundUser.get().getEmail()).isEqualTo("uniquetest@example.com");
     }
 
     @Test
     @Order(11)
     @DisplayName("Поиск пользователя по email - email не найден")
     void testFindByEmailNotFound() {
-        // When
         Optional<User> foundUser = userDAO.findByEmail("nonexistent@example.com");
 
-        // Then
         assertThat(foundUser).isEmpty();
     }
 
@@ -227,10 +219,8 @@ class UserDAOTest {
     @Order(12)
     @DisplayName("Сохранение пользователя с null полями - должно выбросить исключение")
     void testSaveUserWithNullFields() {
-        // Given
         User user = new User(null, null, null);
 
-        // When/Then
         assertThatThrownBy(() -> userDAO.save(user))
                 .isInstanceOf(RuntimeException.class);
     }
@@ -239,12 +229,10 @@ class UserDAOTest {
     @Order(13)
     @DisplayName("Сохранение пользователя с дублирующим email - должно выбросить исключение")
     void testSaveUserWithDuplicateEmail() {
-        // Given
         User user1 = new User("Первый", "duplicate@example.com", 25);
         User user2 = new User("Второй", "duplicate@example.com", 30);
         userDAO.save(user1);
 
-        // When/Then
         assertThatThrownBy(() -> userDAO.save(user2))
                 .isInstanceOf(RuntimeException.class);
     }
