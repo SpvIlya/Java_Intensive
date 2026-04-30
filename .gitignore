@@ -1,13 +1,27 @@
-# Compiled files
+# ============================================
+# JAVA PROJECTS - COMPILED FILES
+# ============================================
 target/
 out/
 **/target/
 **/out/
+*.class
+*.jar
+*.war
+*.ear
 
-# Maven wrapper
+# ============================================
+# MAVEN
+# ============================================
 !.mvn/wrapper/maven-wrapper.jar
+.mvn/
+.mvn/timing.properties
+pom.xml.versionsBackup
+*.repositories
 
-# IntelliJ IDEA
+# ============================================
+# INTELLIJ IDEA
+# ============================================
 .idea/
 *.iws
 *.iml
@@ -15,8 +29,23 @@ out/
 .idea/**/workspace.xml
 .idea/**/tasks.xml
 .idea/**/shelf/
+.idea/**/dataSources/
+.idea/**/dataSources.local.xml
+.idea/**/sqlDataSources.xml
+.idea/**/dynamic.xml
+.idea/**/uiDesigner.xml
+.idea/**/gradle.xml
+.idea/**/libraries/
+.idea/**/modules/
+.idea/**/compiler.xml
+.idea/**/encodings.xml
+.idea/**/jarRepositories.xml
+.idea/**/misc.xml
+.idea/**/vcs.xml
 
-# Eclipse
+# ============================================
+# ECLIPSE
+# ============================================
 .apt_generated
 .classpath
 .factorypath
@@ -24,8 +53,12 @@ out/
 .settings
 .springBeans
 .sts4-cache
+.elasticPath/
+*.launch
 
-# NetBeans
+# ============================================
+# NETBEANS
+# ============================================
 /nbproject/private/
 /nbbuild/
 /dist/
@@ -33,21 +66,126 @@ out/
 /.nb-gradle/
 build/
 
-# VS Code
+# ============================================
+# VS CODE
+# ============================================
 .vscode/
+*.code-workspace
+.history/
 
+# ============================================
+# OPERATING SYSTEM FILES
+# ============================================
 # Mac OS
 .DS_Store
 .AppleDouble
 .LSOverride
+._*
+.Spotlight-V100
+.Trashes
+.fseventsd
 
-# Logs and temp files
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.dll
+*.exe
+
+# Linux
+.directory
+*.directory
+
+# ============================================
+# LOGS AND TEMP FILES
+# ============================================
 *.log
+*.log.*
 *.tmp
 *.temp
 *.swp
 *.swo
 *~
+logs/
+log4j2.log
+application.log
 
-# Kotlin
+# ============================================
+# DATABASE AND TESTCONTAINERS
+# ============================================
+# Testcontainers (важно для ваших интеграционных тестов!)
+.testcontainers/
+.testcontainers.properties
+testcontainers.properties
+
+# H2 database files (для тестов)
+*.h2.db
+*.mv.db
+*.trace.db
+*.lobs.db
+
+# PostgreSQL local data
+postgres-data/
+pgdata/
+*.pgpass
+
+# ============================================
+# APPLICATION CONFIGURATION (SENSITIVE)
+# ============================================
+# Никогда не коммитить файлы с паролями и секретами!
+application.properties
+application-dev.properties
+application-local.properties
+database.properties
+hibernate.properties
+hibernate.cfg.xml.local
+.env
+.env.local
+.secrets/
+.credentials/
+
+# ============================================
+# TESTING REPORTS
+# ============================================
+TEST-*.xml
+*.test
+test-output/
+surefire-reports/
+failsafe-reports/
+jacoco.exec
+target/site/jacoco/
+
+# ============================================
+# PERFORMANCE PROFILING
+# ============================================
+*.hprof
+*.heap
+*.threaddump
+*.jfr
+
+# ============================================
+# BACKUP FILES
+# ============================================
+*.bak
+*.backup
+*.orig
+*.old
+*.~
+
+# ============================================
+# PROJECT SPECIFIC
+# ============================================
+temp/
+tmp/
+data/
+dump.rdb
+*.pid
+*.lock
+
+# ============================================
+# KOTLIN (если используете)
+# ============================================
 .kotlin
+*.kotlin_metadata
+*.kotlin_builtins
