@@ -72,7 +72,7 @@ public class UserService {
             }
             user.setEmail(email.trim());
         }
-        if (age != null && age >= 0 && age <= 150) {
+        if (age != null && age >= 0 && age <= 100) {
             user.setAge(age);
         }
 
