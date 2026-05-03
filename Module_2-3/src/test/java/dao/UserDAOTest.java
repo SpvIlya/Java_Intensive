@@ -76,7 +76,7 @@ class UserDAOTest {
 
     @Test
     @Order(1)
-    @DisplayName("Сохранение пользователя - успешное создание")
+    @DisplayName("Сохранение пользователя (успешное создание)")
     void testSaveUser() {
         User user = new User("Иван Петров", "ivan@example.com", 25);
 
@@ -92,7 +92,7 @@ class UserDAOTest {
 
     @Test
     @Order(2)
-    @DisplayName("Поиск пользователя по ID - успешное нахождение")
+    @DisplayName("Поиск пользователя по ID (успешное нахождение)")
     void testFindById() {
         User user = new User("Мария Сидорова", "maria@example.com", 30);
         User savedUser = userDAO.save(user);
@@ -106,7 +106,7 @@ class UserDAOTest {
 
     @Test
     @Order(3)
-    @DisplayName("Поиск пользователя по ID - пользователь не найден")
+    @DisplayName("Поиск пользователя по ID (пользователь не найден)")
     void testFindByIdNotFound() {
         Optional<User> foundUser = userDAO.findById(999L);
 
@@ -115,7 +115,7 @@ class UserDAOTest {
 
     @Test
     @Order(4)
-    @DisplayName("Поиск всех пользователей - получение списка")
+    @DisplayName("Поиск всех пользователей (получение списка)")
     void testFindAll() {
         User user1 = new User("Алексей Иванов", "alexey@example.com", 28);
         User user2 = new User("Елена Петрова", "elena@example.com", 35);
@@ -131,7 +131,7 @@ class UserDAOTest {
 
     @Test
     @Order(5)
-    @DisplayName("Поиск всех пользователей - пустой список")
+    @DisplayName("Поиск всех пользователей (пустой список)")
     void testFindAllEmpty() {
         List<User> users = userDAO.findAll();
 
@@ -140,7 +140,7 @@ class UserDAOTest {
 
     @Test
     @Order(6)
-    @DisplayName("Обновление пользователя - успешное обновление")
+    @DisplayName("Обновление пользователя (успешное обновление)")
     void testUpdateUser() {
         User user = new User("Оригинальное имя", "original@example.com", 20);
         User savedUser = userDAO.save(user);
@@ -159,7 +159,7 @@ class UserDAOTest {
 
     @Test
     @Order(7)
-    @DisplayName("Удаление пользователя по ID - успешное удаление")
+    @DisplayName("Удаление пользователя по ID (успешное удаление)")
     void testDeleteById() {
         User user = new User("Для удаления", "delete@example.com", 40);
         User savedUser = userDAO.save(user);
@@ -173,7 +173,7 @@ class UserDAOTest {
 
     @Test
     @Order(8)
-    @DisplayName("Удаление пользователя по ID - пользователь не найден")
+    @DisplayName("Удаление пользователя по ID (пользователь не найден)")
     void testDeleteByIdNotFound() {
         boolean deleted = userDAO.deleteById(999L);
 
@@ -182,7 +182,7 @@ class UserDAOTest {
 
     @Test
     @Order(9)
-    @DisplayName("Удаление пользователя по объекту - успешное удаление")
+    @DisplayName("Удаление пользователя по объекту (успешное удаление)")
     void testDeleteByEntity() {
         User user = new User("Удаление по объекту", "deleteEntity@example.com", 35);
         User savedUser = userDAO.save(user);
@@ -195,7 +195,7 @@ class UserDAOTest {
 
     @Test
     @Order(10)
-    @DisplayName("Поиск пользователя по email - успешное нахождение")
+    @DisplayName("Поиск пользователя по email (успешное нахождение)")
     void testFindByEmail() {
         User user = new User("Email тест", "uniquetest@example.com", 22);
         userDAO.save(user);
@@ -208,7 +208,7 @@ class UserDAOTest {
 
     @Test
     @Order(11)
-    @DisplayName("Поиск пользователя по email - email не найден")
+    @DisplayName("Поиск пользователя по email (email не найден)")
     void testFindByEmailNotFound() {
         Optional<User> foundUser = userDAO.findByEmail("nonexistent@example.com");
 
@@ -217,7 +217,7 @@ class UserDAOTest {
 
     @Test
     @Order(12)
-    @DisplayName("Сохранение пользователя с null полями - должно выбросить исключение")
+    @DisplayName("Сохранение пользователя с null полями (должно выбросить исключение)")
     void testSaveUserWithNullFields() {
         User user = new User(null, null, null);
 
@@ -227,7 +227,7 @@ class UserDAOTest {
 
     @Test
     @Order(13)
-    @DisplayName("Сохранение пользователя с дублирующим email - должно выбросить исключение")
+    @DisplayName("Сохранение пользователя с дублирующим email (должно выбросить исключение)")
     void testSaveUserWithDuplicateEmail() {
         User user1 = new User("Первый", "duplicate@example.com", 25);
         User user2 = new User("Второй", "duplicate@example.com", 30);

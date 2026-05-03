@@ -83,7 +83,7 @@ class UserServiceIntegrationTest {
 
     @Test
     @Order(4)
-    @DisplayName("Обновление email на существующий - должно выбросить исключение")
+    @DisplayName("Обновление email на существующий (должно выбросить исключение)")
     void testUpdateToExistingEmail() {
         User user1 = userService.createUser("Первый", "first@example.com", 20);
         User user2 = userService.createUser("Второй", "second@example.com", 25);
@@ -95,7 +95,7 @@ class UserServiceIntegrationTest {
 
     @Test
     @Order(5)
-    @DisplayName("Обновление email на свой же email - должно работать")
+    @DisplayName("Обновление email на свой же email (должно работать)")
     void testUpdateToSameEmail() {
         User user = userService.createUser("Тест", "test@example.com", 20);
 
