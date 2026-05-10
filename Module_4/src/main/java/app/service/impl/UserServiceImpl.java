@@ -1,10 +1,11 @@
-package service;
+package app.service.impl;
 
-import dto.CreateUserRequest;
-import dto.UpdateUserRequest;
-import dto.UserDTO;
-import entity.User;
-import repository.UserRepository;
+import app.dto.CreateUserRequest;
+import app.dto.UpdateUserRequest;
+import app.dto.UserDTO;
+import app.entity.User;
+import app.repository.UserRepository;
+import app.service.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

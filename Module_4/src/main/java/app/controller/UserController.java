@@ -1,9 +1,9 @@
-package controller;
+package app.controller;
 
-import dto.CreateUserRequest;
-import dto.UpdateUserRequest;
-import dto.UserDTO;
-import service.UserService;
+import app.dto.CreateUserRequest;
+import app.dto.UpdateUserRequest;
+import app.dto.UserDTO;
+import app.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

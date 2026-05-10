@@ -1,8 +1,8 @@
-package service;
+package app.service;
 
-import dto.CreateUserRequest;
-import dto.UpdateUserRequest;
-import dto.UserDTO;
+import app.dto.CreateUserRequest;
+import app.dto.UpdateUserRequest;
+import app.dto.UserDTO;
 
 import java.util.List;
 

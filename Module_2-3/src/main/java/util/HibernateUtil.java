@@ -1,5 +1,6 @@
 package util;
 
+import entity.User;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.apache.logging.log4j.LogManager;
@@ -14,7 +15,7 @@ public class HibernateUtil {
         try {
             Configuration configuration = new Configuration();
             configuration.configure("hibernate.cfg.xml");
-            configuration.addAnnotatedClass(entity.User.class);
+            configuration.addAnnotatedClass(User.class);
 
             return configuration.buildSessionFactory();
         } catch (Throwable ex) {
