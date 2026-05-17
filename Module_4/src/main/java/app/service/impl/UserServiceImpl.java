@@ -3,7 +3,9 @@ package app.service.impl;
 import app.dto.CreateUserRequest;
 import app.dto.UpdateUserRequest;
 import app.dto.UserDTO;
+import app.dto.UserEvent;
 import app.entity.User;
+import app.kafka.UserEventProducer;
 import app.repository.UserRepository;
 import app.service.UserService;
 import org.springframework.stereotype.Service;
@@ -17,9 +19,11 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final UserEventProducer eventProducer;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, UserEventProducer eventProducer) {
         this.userRepository = userRepository;
+        this.eventProducer = eventProducer;
     }
 
     @Override
@@ -30,6 +34,9 @@ public class UserServiceImpl implements UserService {
 
         User user = new User(request.getName(), request.getEmail(), request.getAge());
         User savedUser = userRepository.save(user);
+
+        eventProducer.sendUserEvent(new UserEvent(savedUser.getEmail(), "CREATED"));
+
         return convertToDTO(savedUser);
     }
 
@@ -52,10 +59,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Long id) {
-        if (!userRepository.existsById(id)) {
-            throw new RuntimeException("Пользователь с id " + id + " не найден");
-        }
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Пользователь с id " + id + " не найден"));
+
+        String email = user.getEmail();
         userRepository.deleteById(id);
+
+        eventProducer.sendUserEvent(new UserEvent(email, "DELETED"));
     }
 
     @Override
